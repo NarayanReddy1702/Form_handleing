@@ -50,7 +50,7 @@ const handleDelete=(userId)=>{
               <td className="px-4 md:px-6 py-2 md:py-4 border text-center border-gray-300 text-sm">{index+1}</td>
               <td className="px-4 md:px-6 py-2 md:py-4 border text-center border-gray-300 text-sm flex items-center justify-center">
                <div className='w-[14vh] h-[14vh] bg-green-300  overflow-hidden rounded-[50%]'>
-               <img key={index} className='objfit-cover w-full h-full' src={val.image} alt="" />
+               <img key={index} className='object-fill object-center w-full h-full' src={val.image} alt="" />
                </div>
               </td>
               <td className="px-4 md:px-6 py-2 md:py-4 border text-center border-gray-300 uppercase text-sm">{val.username}</td>

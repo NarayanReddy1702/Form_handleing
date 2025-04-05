@@ -1,11 +1,12 @@
 // FormComponent.js
 import React, { useState } from 'react';
 import { usePostUserMutation } from '../store/user';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
 
     const [userData,{isLoading,error}]=usePostUserMutation()
-    
+    const navigate=useNavigate()
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -24,6 +25,7 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
    userData({...formData})
+   navigate("/userDet")
     // Add logic for form submission, such as sending the data to a server
   };
 

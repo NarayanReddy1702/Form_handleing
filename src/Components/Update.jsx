@@ -1,97 +1,78 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useDeleteUserMutation, useGetDataQuery } from '../store/user'
 
-const Update = () => {
-    
-        
-      const [formData, setFormData] = useState({
-        username: '',
-        password: '',
-        image: '',
-      });
-     
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-          ...formData,
-          [name]: value,
-        });
-      };
-    
-    
-      const handleSubmit = (e) => {
-        e.preventDefault();
-       userData({...formData})
-        // Add logic for form submission, such as sending the data to a server
-      };
+const UserTable = () => {
+  const {data:userData,isLoading,error}=useGetDataQuery()
+  const [deleteUser,{isLoading:Loading,error:isError}]=useDeleteUserMutation()
+  console.log(userData);
+  
 
 
+const handleDelete=(userId)=>{
+   confirm(`Do you want to delete this user id :${userId} information !`)?deleteUser(userId):console.log("No Problem!");
+   
+}  
   return (
-    <div className='w-full h-screen flex items-center justify-center'>
-    <div className="max-w-sm mx-auto p-6 bg-white border rounded-lg shadow-md">
-     <h2 className="text-2xl font-semibold text-center mb-4">Form</h2>
+    <>
+    {isLoading?
+            <div className="flex justify-center items-center h-screen">
+      <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+    </div>:userData === null?"There is no Data":<div className="container mx-auto p-4 md:p-6">
+        <div className="overflow-x-auto shadow-md rounded-lg">
+          <table className="min-w-full w-max md:w-full bg-white border border-gray-300">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="px-4 md:px-6 py-2 md:py-3 border text-center border-gray-300 text-[10px] md:text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap">
+                  SI NO
+                </th>
+                <th className="px-4 md:px-6 py-2 md:py-3 border text-center border-gray-300 text-[10px] md:text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap">
+                 User Photo
+                </th>
+                <th className="px-4 md:px-6 py-2 md:py-3 border text-center border-gray-300 text-[10px] md:text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap">
+                  Username
+                </th>
+                <th className="px-4 md:px-6 py-2 md:py-3 border text-center border-gray-300 text-[10px] md:text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap">
+                  PassWord
+                </th>
+                <th className="px-4 md:px-6 py-2 md:py-3 border text-center border-gray-300 text-[10px] md:text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap">
+                  Edit
+                </th>
+                <th className="px-4 md:px-6 py-2 md:py-3 border text-center border-gray-300 text-[10px] md:text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap">
+                  Delete
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white">
+           {isLoading?"isLoading...":error?"error":userData.map((val,index)=>{
+            return (
+              
+              <tr key={index} className="hover:bg-gray-50" >
+              <td className="px-4 md:px-6 py-2 md:py-4 border text-center border-gray-300 text-sm">{index+1}</td>
+              <td className="px-4 md:px-6 py-2 md:py-4 border text-center border-gray-300 text-sm flex items-center justify-center">
+               <div className='w-[14vh] h-[14vh] bg-green-300  overflow-hidden rounded-[50%]'>
+               <img key={index} className='objfit-cover w-full h-full' src={val.image} alt="" />
+               </div>
+              </td>
+              <td className="px-4 md:px-6 py-2 md:py-4 border text-center border-gray-300 uppercase text-sm">{val.username}</td>
+              <td className="px-4 md:px-6 py-2 md:py-4 border text-center border-gray-300 text-sm">{val.password}</td>
+             
+              <td className="px-4 md:px-6 py-2 md:py-4 border text-center border-gray-300">
+                <button className='border-2 bg-green-600 text-white px-2 md:px-3 py-1 text-sm rounded-md hover:text-green-600 hover:bg-transparent hover:border-green-600 ' >Edit</button>
+              </td>
+              <td className="px-4 md:px-6 py-2 md:py-4 border text-center border-gray-300">
+                <button className='border-2 bg-red-600 text-white px-2 md:px-3 py-1 text-sm rounded-md hover:text-red-600 hover:bg-transparent hover:border-red-600' onClick={()=>handleDelete(val.id)} >Delete</button>
+              </td>
+            </tr>
+            )
+           })}
 
-     <form onSubmit={handleSubmit} className="space-y-4">
-       {/* Username Input */}
-       <div>
-         <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-           Username
-         </label>
-         <input
-           type="text"
-           id="username"
-           name="username"
-           value={formData.username}
-           onChange={handleChange}
-           required
-           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-         />
-       </div>
-
-       {/* Password Input */}
-       <div>
-         <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-           Password
-         </label>
-         <input
-           type="password"
-           id="password"
-           name="password"
-           value={formData.password}
-           onChange={handleChange}
-           required
-           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-         />
-       </div>
-
-       {/* Image Upload Input */}
-       <div>
-         <label htmlFor="image" className="block text-sm font-medium text-gray-700">
-           Upload Image
-         </label>
-         <input
-           type="text"
-           id="image"
-           name="image"
-           value={formData.image}
-           onChange={handleChange}
-           accept="image/*"
-           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-         />
-       </div>
-
-       {/* Submit Button */}
-       <div>
-         <button
-           type="submit"
-           className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-         >
-           Submit
-         </button>
-       </div>
-     </form>
-   </div>
-  </div>
+            </tbody>
+          </table>
+        </div>
+      </div>}
+     
+    </>
   )
 }
 
-export default Update
+export default UserTable
